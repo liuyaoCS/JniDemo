@@ -6,12 +6,17 @@
 #define JNIDEMO_NATIVE_LIB_H
 
 #include <jni.h>
+#include <android/log.h>
 
-#define JSTRING JNIEXPORT jstring JNICALL
-#define stringFromJNI  Java_com_example_jnidemo_JniUtils_stringFromJNI
+
+#define initJNI  Java_com_example_jnidemo_JniUtils_initJNI
+
+#define TAG "ly-s"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,TAG, __VA_ARGS__)
+
 
 extern "C" {
-   JSTRING stringFromJNI(JNIEnv *, jobject);
+   void initJNI(JNIEnv *, jobject);
 };
 
 

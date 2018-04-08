@@ -2,6 +2,7 @@ package com.example.jnidemo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -11,8 +12,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(JniUtils.stringFromJNI());
+        JniUtils jniUtils=new JniUtils();
+        jniUtils.initJNI();
     }
 
 }
