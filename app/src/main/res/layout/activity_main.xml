@@ -7,11 +7,11 @@
     tools:context="com.example.jnidemo.MainActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/sample_text"
+    <Button
+        android:id="@+id/binder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="call binder server"
        />
 
 </LinearLayout>
