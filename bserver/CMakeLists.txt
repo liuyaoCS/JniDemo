@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(ServerDemo)
+set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/${ANDROID_ABI}")
 
 include_directories(
     platform/include
@@ -13,6 +14,5 @@ list(APPEND _SRC_MAIN ${_SRC_SERVER})
 add_executable( ${PROJECT_NAME}
              ${_SRC_MAIN} )
 
-set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/${ANDROID_ABI}")
 target_link_libraries( ${PROJECT_NAME}
                        c cutils binder utils log )
