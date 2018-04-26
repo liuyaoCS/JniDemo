@@ -6,7 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.jnidemo.MainActivity"
     android:orientation="vertical">
-
+    <Button
+        android:id="@+id/jni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test jni"
+        />
     <Button
         android:id="@+id/binder"
         android:layout_width="wrap_content"

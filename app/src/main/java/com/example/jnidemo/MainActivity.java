@@ -11,22 +11,22 @@ import com.example.jnidemo.client.IMyServiceManager;
 
 public class MainActivity extends Activity {
     final static String TAG = "ly-s";
-    Button binder;
+    Button binder,jni;
     IMyServiceManager iClientManager=null;
+    JniUtils jniUtils=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         iClientManager= IMyServiceManager.getInstance();
+        jniUtils = new JniUtils();
+
         initView();
-        initJni();
     }
 
 
-
     private void initJni() {
-        JniUtils jniUtils=new JniUtils();
         jniUtils.initJNI();
     }
 
@@ -41,6 +41,14 @@ public class MainActivity extends Activity {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        jni = findViewById(R.id.jni);
+        jni.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initJni();
             }
         });
     }

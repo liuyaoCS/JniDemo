@@ -1,5 +1,5 @@
-#include <string>
 #include "main.h"
+#include "test/Test.h"
 
 /**
  *
@@ -36,6 +36,9 @@ void initJNI(JNIEnv *env,jobject instance) {
     callJavaLog(env,instance);
     callJavaShow(env,instance);
     getField(env,instance);
+
+    //test
+    test();
 }
 
 
