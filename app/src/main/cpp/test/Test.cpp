@@ -2,9 +2,7 @@
 // Created by liuyao-s on 2018/4/26.
 //
 
-
 #include "Test.h"
-#include "../../../../../bserver/platform/include/libc/stdio.h"
 
 void test_type(){
     double x = sqrt(6.25);
@@ -290,12 +288,47 @@ void test_computer(){
     long long c=3;
     LOGI("%d,%d,%d",a,b,c);
 }
+/**
+ * threads or processes communication
+ */
+int test_pipe(){
+    int thePipe[2];
+    char buf[1024];
+    int ret;
 
+    ret=pipe(thePipe);
+    if(ret==-1){
+        return -1;
+    }
+
+    int pid=fork();
+    if(pid==-1){
+        return -1;
+    }
+
+    if(pid==0){
+        const char *content="hello";
+        close(thePipe[0]);
+        write(thePipe[1],content,strlen(content));
+        close(thePipe[1]);
+        LOGI("child process write ：%s\n",content);
+    }else{
+        close(thePipe[1]);
+        int res=read(thePipe[0],buf,1023);
+        buf[res]=0;
+        close(thePipe[0]);
+        LOGI("parent process read ：%s\n",buf);
+    }
+
+    return 0;
+}
 void test(){
     test_type();
+    test_cast();
     test_char();
     test_string();
     test_class();
+    test_file();
 
     test_function_paramter_transmit();
     test_function_pointer();
@@ -305,9 +338,9 @@ void test(){
 
     test_template();
     test_exception();
-    test_cast();
-    test_file();
 
     test_c11();
     test_computer();
+
+    test_pipe();
 }

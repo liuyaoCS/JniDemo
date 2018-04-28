@@ -5,8 +5,11 @@
 #ifndef JNIDEMO_TEST_H
 #define JNIDEMO_TEST_H
 
-#include <string>
 #include <math.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <wait.h>
+#include <string>
 #include <vector>
 #include <array>
 #include <set>
