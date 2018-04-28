@@ -2,6 +2,7 @@
 // Created by liuyao-s on 2018/4/26.
 //
 
+#include <sys/epoll.h>
 #include "Test.h"
 
 void test_type(){
@@ -313,11 +314,60 @@ int test_pipe(){
         close(thePipe[1]);
         LOGI("child process write ：%s\n",content);
     }else{
+        LOGI("parent[test_pipe] pid=%d",pid);
         close(thePipe[1]);
         int res=read(thePipe[0],buf,1023);
         buf[res]=0;
         close(thePipe[0]);
         LOGI("parent process read ：%s\n",buf);
+    }
+
+    return 0;
+}
+int test_epoll(){
+    int ret;
+
+    int pipe_fd[2];
+    ret = pipe(pipe_fd);
+    if(ret==-1){
+        return -1;
+    }
+
+    const int MAX = 10;
+    struct epoll_event ev;
+    ev.data.fd = pipe_fd[0];
+    ev.events = EPOLLIN | EINTR;
+    int epfd=epoll_create(MAX);
+    ret= epoll_ctl(epfd,EPOLL_CTL_ADD,pipe_fd[0],&ev);
+    if(ret==-1){
+        return -1;
+    }
+
+    int pid=fork();
+    if(pid==-1){
+        return -1;
+    }
+    if(pid==0){
+        string content = "hi, i am child";
+        write(pipe_fd[1],content.c_str(),strlen(content.c_str()));
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+    }else{
+        LOGI("parent[test_epoll] pid=%d",pid);
+        struct epoll_event events[MAX];
+        int count = epoll_wait(epfd,events,MAX,1000);
+        for(int i=0;i<count;i++){
+            LOGI("count=%d event %d comes at process:%d",count,events[i].events,pid);
+            if(events[i].events&EPOLLIN && events[i].data.fd==pipe_fd[0]){
+                char buf[1024];
+                int size=read(pipe_fd[0],buf,1023);
+                buf[size]='\0';
+                LOGI("read content:%s",buf);
+            }
+        }
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+        close(epfd);
     }
 
     return 0;
@@ -342,5 +392,7 @@ void test(){
     test_c11();
     test_computer();
 
-    test_pipe();
+    //下面函数二选一测试,同时执行的话，第一个的子进程也会执行第二个的fork逻辑，干扰执行
+//    test_pipe();
+    test_epoll();
 }
