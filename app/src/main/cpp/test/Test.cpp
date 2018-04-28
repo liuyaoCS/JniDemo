@@ -242,6 +242,55 @@ void test_c11(){
     int *b = NULL;
 
 }
+/**
+ * 在c中，联合体（共用体）的数据成员都是从低地址开始存放。
+ 若是小端模式，由低地址到高地址c.a存放为0x01 00 00 00，c.b被赋值为0x01；
+  ————————————————————————————
+   地址 0x00000000 0x00000001 0x00000002 0x00000003
+   c.a  01         00         00         00
+   c.b  01         00
+  ————————————————————————————
+3  若是大端模式，由低地址到高地址c.a存放为0x00 00 00 01，c.b被赋值为0x0；
+  ————————————————————————————
+   地址 0x00000000 0x00000001 0x00000002 0x00000003
+   c.a  00         00         00         01
+   c.b  00         00
+  ————————————————————————————
+ * @return
+ */
+bool test_is_big_endian(){
+    union w
+    {
+        int a;  //4 bytes
+        char b; //1 byte
+    } c;
+    c.a=1;
+    if (c.b==1)
+        return false;
+    else
+        return true;
+
+}
+void test_computer(){
+    //storage 0 -1
+    int i = 4294967296;
+    LOGI("i=%d",i);
+    i = 4294967295;
+    LOGI("i=%d",i);
+
+    //endian 0 1 0
+    if(test_is_big_endian()){
+        LOGI("big endian");
+    }else{
+        LOGI("little endian");
+    }
+    ///32位环境，cpu为小端模式，所有参数用栈传递
+    long long a=1;
+    long long b=2;
+    long long c=3;
+    LOGI("%d,%d,%d",a,b,c);
+}
+
 void test(){
     test_type();
     test_char();
@@ -260,4 +309,5 @@ void test(){
     test_file();
 
     test_c11();
+    test_computer();
 }
