@@ -2,7 +2,6 @@
 // Created by liuyao-s on 2018/4/26.
 //
 
-#include <sys/epoll.h>
 #include "Test.h"
 
 void test_type(){
@@ -313,6 +312,7 @@ int test_pipe(){
         write(thePipe[1],content,strlen(content));
         close(thePipe[1]);
         LOGI("child process write ：%s\n",content);
+        exit(0);
     }else{
         LOGI("parent[test_pipe] pid=%d",pid);
         close(thePipe[1]);
@@ -336,7 +336,7 @@ int test_epoll(){
     const int MAX = 10;
     struct epoll_event ev;
     ev.data.fd = pipe_fd[0];
-    ev.events = EPOLLIN | EINTR;
+    ev.events = EPOLLIN;
     int epfd=epoll_create(MAX);
     ret= epoll_ctl(epfd,EPOLL_CTL_ADD,pipe_fd[0],&ev);
     if(ret==-1){
@@ -392,7 +392,7 @@ void test(){
     test_c11();
     test_computer();
 
-    //下面函数二选一测试,同时执行的话，第一个的子进程也会执行第二个的fork逻辑，干扰执行
-//    test_pipe();
+    //确保test_pipe子进程执行完exit，否则会影响test_epoll;下面函数二选一测试,同时执行的话，第一个的子进程也会执行第二个的fork逻辑，干扰执行
+    test_pipe();
     test_epoll();
 }

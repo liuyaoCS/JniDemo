@@ -8,13 +8,14 @@
 #include <math.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <wait.h>
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <array>
 #include <set>
 #include <map>
 #include <fstream>
+#include <sys/epoll.h>
 
 #include <android/log.h>
 
