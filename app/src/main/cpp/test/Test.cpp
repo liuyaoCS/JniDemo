@@ -3,6 +3,8 @@
 //
 
 #include "Test.h"
+#include <fcntl.h>
+#include <sys/mman.h>
 
 void test_type(){
     double x = sqrt(6.25);
@@ -372,6 +374,29 @@ int test_epoll(){
 
     return 0;
 }
+void test_mmap(){
+    const char* file="/data/data/com.example.jnidemo/test.txt";
+    int fd;
+    char* mmem;
+
+    int len=128;
+
+    fd=open(file,O_RDWR|O_CREAT);
+    len=lseek(fd,1,SEEK_END);
+    write(fd,"\0",1);
+    lseek(fd,0,SEEK_SET);
+
+    mmem= (char *) mmap(0, len, PROT_READ|PROT_WRITE, MAP_PRIVATE, fd, 0);
+    LOGI("map mem: %s",mmem);
+    char *p=strstr(mmem,"hello");
+    if(p!= nullptr){
+        memcpy(p,"linux",5);
+    }
+    LOGI("map mem replace : %s",mmem);
+
+    close(fd);
+    munmap(mmem,len);
+}
 void test(){
     test_type();
     test_cast();
@@ -395,4 +420,5 @@ void test(){
     //确保test_pipe子进程执行完exit，否则会影响test_epoll;下面函数二选一测试,同时执行的话，第一个的子进程也会执行第二个的fork逻辑，干扰执行
     test_pipe();
     test_epoll();
+    test_mmap();
 }
